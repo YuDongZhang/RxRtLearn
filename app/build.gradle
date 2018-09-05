@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.example.rxjavalearn.rxrtlearn"
+        applicationId "com.example.rxrtlearn"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
@@ -25,4 +25,30 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //rxjava 配置
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.x.y'
+
+    //retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    //Gson converter converter-gson 用于将请求结果转换为实体类型
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    //RxJava2 Adapter
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+
+    //okhttp3:logging-interceptor是为了配置缓存策略，必须跟okhttp同一版本号，
+    // 否则会报错：Failed resolution of: Lokhttp3/internal/Platform
+    compile 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+
+    //converter-scalars 用于将请求结果转换为基本类型，一般为String
+    compile 'com.squareup.retrofit2:converter-scalars:2.3.0'
+
+    compile 'com.blankj:utilcode:1.15.0'
+
+    configurations.all {
+        resolutionStrategy.force 'com.android.support:support-annotations:27.1.1'
+    }
 }

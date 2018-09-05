@@ -1,4 +1,4 @@
-package com.example.rxjavalearn.rxrtlearn;
+package com.example.rxrtlearn;
 
 import org.junit.Test;
 
