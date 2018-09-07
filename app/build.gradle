@@ -48,6 +48,11 @@ dependencies {
 
     compile 'com.blankj:utilcode:1.15.0'
 
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+
+
     configurations.all {
         resolutionStrategy.force 'com.android.support:support-annotations:27.1.1'
     }

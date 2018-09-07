@@ -1,4 +1,4 @@
-package com.example.rxrtlearn;
+package com.example.rxrtlearn.Journal;
 
 import com.example.rxrtlearn.bean.Journalism;
 
@@ -11,7 +11,7 @@ import retrofit2.http.Path;
  * Created by pateo on 18-9-5.
  */
 
-public interface ApiService {
+public interface JournalApiService {
     @GET("journalismApi")
     Observable<Journalism> getJournalism();
 }
