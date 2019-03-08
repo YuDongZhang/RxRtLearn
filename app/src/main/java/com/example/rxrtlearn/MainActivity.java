@@ -7,21 +7,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.rxrtlearn.Journal.JournalApi;
 import com.example.rxrtlearn.Journal.JournalApiMethods;
 import com.example.rxrtlearn.Journal.JournalApiService;
 import com.example.rxrtlearn.Journal.MyObserver;
 import com.example.rxrtlearn.Journal.ObserverOnNextListener;
 import com.example.rxrtlearn.bean.Journalism;
+import com.example.rxrtlearn.bean.MovieEntity;
+import com.example.rxrtlearn2.RtApi;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -29,6 +34,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * https://blog.csdn.net/DeMonliuhui/article/details/77868677  依据文章
+ *
+ * https://gank.io/post/56e80c2c677659311bed9841
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -127,5 +134,109 @@ public class MainActivity extends AppCompatActivity {
         };
         JournalApiMethods.getJounal(new MyObserver<Journalism>(this,listener));
     }
+
+
+
+    //原则流程
+    private void getMovie(){
+        String baseUrl = "https://api.douban.com/v2/movie/";//基础的baseurl
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())//converter转换器
+                .build();
+
+        RtApi rtApi = retrofit.create(RtApi.class);
+        Call<MovieEntity> call = rtApi.getTopMovie(0,10);
+        call.enqueue(new Callback<MovieEntity>() {
+            @Override
+            public void onResponse(Call<MovieEntity> call, Response<MovieEntity> response) {
+                tv2.setText(response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<MovieEntity> call, Throwable t) {
+                tv2.setText(t.getMessage());
+            }
+        });
+
+    }
+
+
+    //rxjava 进行网络请求    与上面不同的就是   RtApi的
+    private void getRxjavaMovie(){
+        String baseUrl = "https://api.douban.com/v2/movie/";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+
+        RtApi movieService = retrofit.create(RtApi.class);
+
+        movieService.getRxTopMovie(0, 10)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<MovieEntity>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(MovieEntity value) {
+                        tv2.setText(value.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void test(){
+        String baseUrl = "www.baidu.com";
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+
+        RtApi rtApi = retrofit.create(RtApi.class);
+
+        rtApi.getRxTopMovie(0,10)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<MovieEntity>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(MovieEntity value) {
+                        tv2.setText(value.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+
 
 }
